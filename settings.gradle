@@ -1,3 +1,4 @@
+include ':cbStorage'
 include ':cbNetWork'
 include ':cbTools'
 include ':app'
