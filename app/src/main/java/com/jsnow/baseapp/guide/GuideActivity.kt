@@ -1,11 +1,12 @@
 package com.jsnow.baseapp.guide
 
-import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import com.jsnow.baseapp.R
+import com.jsnow.cbtools.interfaces.ContentLayout
 import com.jsnow.cbtools.base.BaseActivity
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 
+@ContentLayout(R.layout.activity_guide)
 class GuideActivity : BaseActivity() {
     private val imgs = arrayOf(
         R.drawable.ic_avatar,
@@ -13,10 +14,6 @@ class GuideActivity : BaseActivity() {
         R.drawable.ic_avatar,
         R.drawable.ic_avatar
     )
-
-    override fun setLayoutResourceID(): Int {
-        return R.layout.activity_guide
-    }
 
     override fun initViews() {
         val viewPager = findViewById<ViewPager2>(R.id.viewPager)
@@ -26,7 +23,6 @@ class GuideActivity : BaseActivity() {
         dotsIndicator.setViewPager2(viewPager)
     }
 
-    override fun initDatas() {
-        TODO("Not yet implemented")
-    }
+    override fun initDatas() {}
+
 }
