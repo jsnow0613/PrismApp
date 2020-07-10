@@ -1,5 +1,5 @@
+include ':cbLogin'
 include ':cbStorage'
-include ':cbNetWork'
-include ':cbTools'
+include ':cbCommonBase'
 include ':app'
 rootProject.name = "BaseApp"

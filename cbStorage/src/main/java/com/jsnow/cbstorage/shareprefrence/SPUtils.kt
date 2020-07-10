@@ -2,7 +2,7 @@ package com.jsnow.cbstorage.shareprefrence
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.jsnow.cbtools.base.BaseApp
+import com.jsnow.cbcommonbase.base.BaseApp
 
 /**
  * Author:bincheng
