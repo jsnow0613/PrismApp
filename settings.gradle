@@ -1,5 +1,5 @@
-include ':cbLogin'
-include ':cbStorage'
-include ':cbCommonBase'
+include ':prismLogin'
+include ':prismStorage'
+include ':prismBase'
 include ':app'
-rootProject.name = "BaseApp"
+rootProject.name = "PrismApp"

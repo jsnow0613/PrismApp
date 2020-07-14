@@ -12,9 +12,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/cbCommonBase" />
-            <option value="$PROJECT_DIR$/cbLogin" />
-            <option value="$PROJECT_DIR$/cbStorage" />
+            <option value="$PROJECT_DIR$/prismBase" />
+            <option value="$PROJECT_DIR$/prismLogin" />
+            <option value="$PROJECT_DIR$/prismStorage" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
