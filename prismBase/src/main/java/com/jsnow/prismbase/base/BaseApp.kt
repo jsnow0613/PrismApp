@@ -2,6 +2,7 @@ package com.jsnow.prismbase.base
 
 import android.app.Application
 import android.content.Context
+import com.jsnow.prismbase.tools.CrashManager
 
 /**
  * Author:bincheng
@@ -11,8 +12,8 @@ import android.content.Context
 open class BaseApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        Companion.appContext = applicationContext
-
+        appContext = applicationContext
+        CrashManager.init()
     }
 
     companion object {
