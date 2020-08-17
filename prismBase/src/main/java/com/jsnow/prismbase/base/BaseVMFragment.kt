@@ -28,7 +28,8 @@ abstract class BaseVMFragment<VM : BaseViewModel> : BaseFragment() {
         if (type is ParameterizedType) {
             val tp = type.actualTypeArguments[0]
             val tClass = tp as? Class<VM> ?: BaseViewModel::class.java
-            val viewModelStore = if (isShareVM()) activity!!.viewModelStore else this.viewModelStore
+            val viewModelStore =
+                if (isShareVM()) requireActivity().viewModelStore else this.viewModelStore
             viewModel = ViewModelProvider(viewModelStore, ViewModelFactory()).get(tClass) as VM
         }
     }

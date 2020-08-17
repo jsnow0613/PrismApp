@@ -1,11 +1,11 @@
-package com.jsnow.prismsample.guide
+package com.jsnow.prism.guide
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.jsnow.prismsample.R
+import com.jsnow.prism.R
 
 /**
  * Author:bincheng

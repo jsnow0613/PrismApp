@@ -1,21 +1,26 @@
-package com.jsnow.cbstorage.shareprefrence
+package com.jsnow.prismstorage.shareprefrence
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.jsnow.prismbase.base.BaseApp
 
 /**
  * Author:bincheng
  * Date:2020/7/1 - 2:51 PM
  * Description:SPUtils
  */
-object SPUtils {
-    private const val SP_NAME = "App_config"
-    private const val KEY_TOKEN = "key_token"
-    private const val KEY_IS_FIRST_OPEN = "key_is_first_open"
+class SPUtils private constructor(mContext: Application) {
+
+    companion object {
+        fun getInstance(context: Application) = SPUtils(context)
+        private const val KEY_IS_FIRST_OPEN = "key_is_first_open"
+        private val SP_NAME = "App_config"
+        private val KEY_TOKEN = "key_token"
+    }
+
 
     private val prefs: SharedPreferences by lazy {
-        BaseApp.appContext.getSharedPreferences(
+        mContext.getSharedPreferences(
             SP_NAME,
             Context.MODE_PRIVATE
         )
@@ -33,15 +38,15 @@ object SPUtils {
         //1.首次安装：引导页 -> 登录页面
         //2.非首次安装，未登录：登录页面
         //3.非首次安装，已登录：首页
-        val isFisrtOpen = prefs.getBoolean(KEY_IS_FIRST_OPEN, true)
+        val isFisrtOpen = prefs.getBoolean(Companion.KEY_IS_FIRST_OPEN, true)
         if (isFisrtOpen) {
-            prefs.edit().putBoolean(KEY_IS_FIRST_OPEN, false).apply()
+            prefs.edit().putBoolean(Companion.KEY_IS_FIRST_OPEN, false).apply()
             return 1
         } else {
-            if (getToken().isNotEmpty()) {
-                return 3
+            return if (getToken().isNotEmpty()) {
+                3
             } else {
-                return 2
+                2
             }
         }
     }

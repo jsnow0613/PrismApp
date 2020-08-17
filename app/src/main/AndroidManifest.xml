@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.jsnow.prismsample">
+    package="com.jsnow.prism">
 
     <application
         android:allowBackup="true"
@@ -13,13 +13,12 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon"
         android:autoRevokePermissions="allowed">
-        <activity android:name="com.jsnow.prismsample.guide.GuideActivity"></activity>
+        <activity android:name="com.jsnow.prism.guide.GuideActivity"></activity>
         <activity
-            android:name="com.jsnow.prismsample.SplashActivity"
+            android:name="com.jsnow.prism.SplashActivity"
             android:label="PrismApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

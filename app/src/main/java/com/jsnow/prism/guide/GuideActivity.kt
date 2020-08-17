@@ -1,11 +1,11 @@
-package com.jsnow.prismsample.guide
+package com.jsnow.prism.guide
 
 import android.os.Handler
 import android.view.View
 import android.widget.Button
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
-import com.jsnow.prismsample.R
+import com.jsnow.prism.R
 import com.jsnow.prismbase.base.BaseActivity
 import com.jsnow.prismbase.annotation.ContentLayout
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator

@@ -47,5 +47,5 @@ dependencies {
     api rootProject.ext.dependencies.utilcodex
     //dialog
     implementation rootProject.ext.dependencies.sweetalert
-
+    implementation rootProject.ext.dependencies.agentweb
 }

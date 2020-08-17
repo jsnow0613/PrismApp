@@ -1,10 +1,10 @@
-package com.jsnow.prismsample
+package com.jsnow.prism
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.jsnow.prismsample.guide.GuideActivity
+import com.jsnow.prism.guide.GuideActivity
 import com.jsnow.prismbase.annotation.ContentLayout
 import com.jsnow.prismbase.annotation.FullScreen
 

@@ -19,7 +19,6 @@ abstract class BaseActivity : AppCompatActivity() {
     val TAG: String by lazy {
         javaClass.simpleName
     }
-
     var isFullScreen = false
     var layoutResId = 1
     lateinit var headerView: HeaderView
