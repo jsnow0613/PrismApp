@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.jsnow.prism.guide.GuideActivity
+import com.jsnow.prism.ui.guide.GuideActivity
 import com.jsnow.prismbase.annotation.ContentLayout
 import com.jsnow.prismbase.annotation.FullScreen
 

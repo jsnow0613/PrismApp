@@ -1,5 +1,5 @@
 include ':prismLogin'
-include ':prismStorage'
 include ':prismBase'
 include ':app'
 rootProject.name = "PrismApp"
+include ':prismStorage'

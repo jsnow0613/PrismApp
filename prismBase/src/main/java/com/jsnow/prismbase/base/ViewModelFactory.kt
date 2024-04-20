@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
  * Description:ViewModelFactory
  */
 class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return modelClass.newInstance()
     }
 }

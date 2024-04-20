@@ -1,120 +1,121 @@
 package com.jsnow.prismbase.base
 
+import android.graphics.Color
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
-import android.widget.LinearLayout
+import android.view.KeyEvent
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import com.jsnow.prismbase.annotation.ContentLayout
-import com.jsnow.prismbase.annotation.FullScreen
-import com.jsnow.prismbase.annotation.Header
-import com.jsnow.prismbase.tools.DialogTool
-import com.jsnow.prismbase.tools.logD
-import com.jsnow.prismbase.tools.logE
-import com.jsnow.prismbase.tools.showToast
-import com.jsnow.prismbase.views.HeaderView
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.viewbinding.ViewBinding
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
+import com.jsnow.mybase.utils.BarUtil
 import com.jsnow.prismbase.R
+import java.lang.reflect.ParameterizedType
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity<DB : ViewBinding> : AppCompatActivity() {
     val TAG: String by lazy {
         javaClass.simpleName
     }
-    var isFullScreen = false
-    var layoutResId = 1
-    lateinit var headerView: HeaderView
-    lateinit var title: String
-    var hasTitleView = false
+
+    protected lateinit var mBinding: DB
+
+    private var dialog: MaterialDialog? = null
+
+    open val layoutId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (isImmersionBar()) {
-            setStatusBar()
-        }
-        initAttributes()
-        initContentLayout()
-        initViews()
-        initDatas()
+        setStatusBar()
+        initViewDataBinding()
+        initView(savedInstanceState)
+        initObserve()
+        initData()
     }
 
-    abstract fun initViews()
-    abstract fun initDatas()
+    abstract fun initView(savedInstanceState: Bundle?)
+    open fun initObserve() {}
+    abstract fun initData()
 
-    private fun initContentLayout() {
-        if (hasTitleView) {
-            val headerContentLayout =
-                layoutInflater.inflate(R.layout.content_layout_header, null, false) as LinearLayout
-            headerView = headerContentLayout.findViewById<HeaderView>(R.id.header)
-            headerView.setTitle(title)
-
-            val contentLayout = layoutInflater.inflate(layoutResId, null, false)
-            headerContentLayout.addView(contentLayout)
-            setContentView(headerContentLayout)
-        } else {
-            setContentView(layoutResId)
-        }
-    }
-
-    private fun initAttributes() {
-        try {
-            val fullScreen = javaClass.getAnnotation(FullScreen::class.java)
-            val contentLayout = javaClass.getAnnotation(ContentLayout::class.java)
-            val headerLayout = javaClass.getAnnotation(Header::class.java)
-
-            if (fullScreen != null) {
-                isFullScreen = fullScreen.value
-                if (isFullScreen) {
-                    requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    window.setFlags(
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN
-                    );
-                }
-            }
-
-            if (contentLayout != null) {
-                if (contentLayout.value != -1) {
-                    layoutResId = contentLayout.value
-                }
-            }
-
-            if (headerLayout != null) {
-                title = headerLayout.title
-                hasTitleView = true
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    open fun isImmersionBar(): Boolean {
-        return true
-    }
-
-    //设置沉浸式状态栏
     private fun setStatusBar() {
+        BarUtil.transparentStatusBar(this)
+
         // 透明状态栏
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        // 透明导航栏
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//        // 透明导航栏
+//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
     }
 
-    open fun toast(text: String) {
-        text.showToast()
+    /**
+     * DataBinding or ViewBinding
+     */
+    private fun initViewDataBinding() {
+        val type = javaClass.genericSuperclass
+        if (type is ParameterizedType) {
+            val cls = type.actualTypeArguments
+                .map { it as Class<*> }
+                .first { ViewBinding::class.java.isAssignableFrom(it) }
+            when {
+                ViewDataBinding::class.java.isAssignableFrom(cls) && cls != ViewDataBinding::class.java -> {
+                    if (layoutId == 0) throw IllegalArgumentException("Using DataBinding requires overriding method layoutId")
+                    mBinding = DataBindingUtil.setContentView(this, layoutId)
+                    (mBinding as ViewDataBinding).lifecycleOwner = this
+                }
+
+                ViewBinding::class.java.isAssignableFrom(cls) && cls != ViewBinding::class.java -> {
+                    cls.getDeclaredMethod("inflate", LayoutInflater::class.java).let {
+                        @Suppress("UNCHECKED_CAST")
+                        mBinding = it.invoke(null, layoutInflater) as DB
+                        setContentView(mBinding.root)
+                    }
+                }
+
+                else -> {
+                    if (layoutId == 0) throw IllegalArgumentException("If you don't use ViewBinding, you need to override method layoutId")
+                    setContentView(layoutId)
+                }
+            }
+        } else throw IllegalArgumentException("Generic error")
+    }
+    /**
+     * 打开等待框
+     */
+    protected fun showLoading() {
+        dialog ?: MaterialDialog(this)
+            .cancelable(false)
+            .cornerRadius(5f)
+            .customView(R.layout.custom_progress_dialog_view, noVerticalPadding = true)
+            .lifecycleOwner(this)
+            .maxWidth(R.dimen.dimen_120).also {
+                dialog = it
+            }
+            .also {
+                it.window?.setDimAmount(0.7f)
+                it.view.setBackgroundColor(Color.TRANSPARENT)
+            }.show()
     }
 
-    open fun logD(text: String) {
-        text.logD(TAG)
+    /**
+     * 关闭等待框
+     */
+    protected fun dismissLoading() {
+        dialog?.run { if (isShowing) dismiss() }
     }
 
-    open fun logE(text: String) {
-        text.logE(TAG)
+    protected fun canDialogCancle(callback: (() -> Unit)? = null) {
+        dialog?.setOnKeyListener { dialog, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                dialog.dismiss()
+                callback?.invoke()
+                true
+            }
+            false
+        }
     }
 
-    open fun showProgressDialog() {
-        DialogTool.showProgressDialog()
-    }
-
-    open fun dismissProgressDialog() {
-        DialogTool.dismissDialog()
+    fun finishMe() {
+        finish()
     }
 }
